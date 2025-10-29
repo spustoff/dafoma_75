@@ -90,3 +90,4 @@ struct AppAnimations {
     static let slow = Animation.easeInOut(duration: 0.5)
     static let spring = Animation.spring(response: 0.6, dampingFraction: 0.8)
 }
+

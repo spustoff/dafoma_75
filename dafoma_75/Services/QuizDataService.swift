@@ -253,3 +253,4 @@ class QuizDataService: ObservableObject {
         saveQuizzes()
     }
 }
+

@@ -234,3 +234,4 @@ struct PuzzleSession: Identifiable, Codable {
         return Date().timeIntervalSince(startTime)
     }
 }
+

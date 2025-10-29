@@ -314,77 +314,85 @@ struct QuizPlayView: View {
                     .padding(.horizontal, AppSpacing.lg)
                     .padding(.top, AppSpacing.md)
                     
-                    // Question content
-                    if let question = viewModel.currentQuestion {
-                        VStack(spacing: AppSpacing.xl) {
-                            // Question
-                            VStack(spacing: AppSpacing.md) {
-                                Text(question.question)
-                                    .font(AppFonts.title2)
-                                    .font(.system(size: 17, weight: .medium))
-                                    .foregroundColor(Color.textPrimary)
-                                    .multilineTextAlignment(.center)
-                                    .lineLimit(nil)
-                                    .padding(.horizontal, AppSpacing.lg)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, AppSpacing.xl)
+                    ScrollView(.vertical, showsIndicators: false) {
+                        
+                        VStack {
                             
-                            // Answer options
-                            VStack(spacing: AppSpacing.md) {
-                                ForEach(Array(question.options.enumerated()), id: \.offset) { index, option in
-                                    AnswerOptionView(
-                                        option: option,
-                                        index: index,
-                                        isSelected: viewModel.selectedAnswerIndex == index,
-                                        isCorrect: viewModel.showExplanation ? question.correctAnswerIndex == index : nil,
-                                        showResult: viewModel.showExplanation
-                                    ) {
-                                        viewModel.selectAnswer(index)
+                            if let question = viewModel.currentQuestion {
+                                VStack(spacing: AppSpacing.xl) {
+                                    // Question
+                                    VStack(spacing: AppSpacing.md) {
+                                        Text(question.question)
+                                            .font(AppFonts.title2)
+                                            .font(.system(size: 17, weight: .medium))
+                                            .foregroundColor(Color.textPrimary)
+                                            .multilineTextAlignment(.center)
+                                            .lineLimit(nil)
+                                            .padding(.horizontal, AppSpacing.lg)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, AppSpacing.xl)
+                                    
+                                    // Answer options
+                                    VStack(spacing: AppSpacing.md) {
+                                        ForEach(Array(question.options.enumerated()), id: \.offset) { index, option in
+                                            AnswerOptionView(
+                                                option: option,
+                                                index: index,
+                                                isSelected: viewModel.selectedAnswerIndex == index,
+                                                isCorrect: viewModel.showExplanation ? question.correctAnswerIndex == index : nil,
+                                                showResult: viewModel.showExplanation
+                                            ) {
+                                                viewModel.selectAnswer(index)
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal, AppSpacing.lg)
+                                    
+                                    // Explanation
+                                    if viewModel.showExplanation, let explanation = question.explanation {
+                                        VStack(alignment: .leading, spacing: AppSpacing.sm) {
+                                            Text("Explanation")
+                                                .font(AppFonts.headline)
+                                                .foregroundColor(Color.textPrimary)
+                                            
+                                            Text(explanation)
+                                                .font(AppFonts.body)
+                                                .foregroundColor(Color.textSecondary)
+                                                .lineLimit(nil)
+                                        }
+                                        .padding(AppSpacing.md)
+                                        .background(Color.cardBackground)
+                                        .cornerRadius(AppCornerRadius.medium)
+                                        .padding(.horizontal, AppSpacing.lg)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    // Next button
+                                    if viewModel.canProceed {
+                                        Button(action: {
+                                            viewModel.nextQuestion()
+                                        }) {
+                                            Text(viewModel.isLastQuestion ? "Finish Quiz" : "Next Question")
+                                                .font(AppFonts.headline)
+                                                .font(.system(size: 17, weight: .semibold))
+                                                .foregroundColor(Color.primaryBackground)
+                                                .frame(maxWidth: .infinity)
+                                                .padding(.vertical, AppSpacing.md)
+                                                .background(Color.accentYellow)
+                                                .cornerRadius(AppCornerRadius.medium)
+                                        }
+                                        .padding(.horizontal, AppSpacing.lg)
+                                        .padding(.bottom, AppSpacing.xl)
                                     }
                                 }
                             }
-                            .padding(.horizontal, AppSpacing.lg)
-                            
-                            // Explanation
-                            if viewModel.showExplanation, let explanation = question.explanation {
-                                VStack(alignment: .leading, spacing: AppSpacing.sm) {
-                                    Text("Explanation")
-                                        .font(AppFonts.headline)
-                                        .foregroundColor(Color.textPrimary)
-                                    
-                                    Text(explanation)
-                                        .font(AppFonts.body)
-                                        .foregroundColor(Color.textSecondary)
-                                        .lineLimit(nil)
-                                }
-                                .padding(AppSpacing.md)
-                                .background(Color.cardBackground)
-                                .cornerRadius(AppCornerRadius.medium)
-                                .padding(.horizontal, AppSpacing.lg)
-                            }
-                            
-                            Spacer()
-                            
-                            // Next button
-                            if viewModel.canProceed {
-                                Button(action: {
-                                    viewModel.nextQuestion()
-                                }) {
-                                    Text(viewModel.isLastQuestion ? "Finish Quiz" : "Next Question")
-                                        .font(AppFonts.headline)
-                                        .font(.system(size: 17, weight: .semibold))
-                                        .foregroundColor(Color.primaryBackground)
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, AppSpacing.md)
-                                        .background(Color.accentYellow)
-                                        .cornerRadius(AppCornerRadius.medium)
-                                }
-                                .padding(.horizontal, AppSpacing.lg)
-                                .padding(.bottom, AppSpacing.xl)
-                            }
                         }
                     }
+                    
+                    // Question content
+                    
                 }
             }
         }
